@@ -20,7 +20,7 @@ class ProductoFactory extends Factory
         return [
             'categoria_id'  => \App\Models\Categoria::inRandomOrder()->first()->id,
             'nombre'        => fake()->words(3, true),
-            'sku'           => strtoupper(fake()->unique()->bothify('??-####')),
+            'sku'           => strtoupper(fake()->unique()->bothify('COD-####')),
             'precio'        => fake()->randomFloat(2, 5, 500),
             'stock'         => fake()->numberBetween(0, 100),
             'disponible'    => true,
