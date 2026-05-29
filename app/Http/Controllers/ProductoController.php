@@ -54,7 +54,7 @@ class ProductoController extends Controller
     public function edit(Producto $producto)
     {
         $categorias = Categoria::where('activo', true)->get();
-        return view('prductos.edit', compact('prodcuto', 'categorias'));
+        return view('productos.edit', compact('producto', 'categorias'));
     }
 
     /**
