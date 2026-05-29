@@ -37,6 +37,11 @@ class ProductoRequest extends FormRequest
                 'numeric',
                 'min:0',
             ],
+            'stock' => [
+                'required',
+                'integer',
+                'min:0',
+            ],
             'categoria_id' => [
                 'required',
                 Rule::exists('categorias', 'id'),

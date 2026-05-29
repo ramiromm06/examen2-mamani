@@ -4,52 +4,93 @@
 
 @section('contenido')
 
-    <div class="card">
-        <h2>📋 Detalle: {{ $producto->nombre }}</h2>
+<div class="page-header">
+    <h1>📋 Detalle del Producto</h1>
+    <a href="{{ route('productos.index') }}" class="btn btn-secondary">← Volver</a>
+</div>
 
-        <table style="width:auto; min-width:400px;">
+<div class="card">
+    <p class="section-title">{{ $producto->nombre }}</p>
+
+    <table class="detail-table">
+        <tbody>
             <tr>
                 <th>ID</th>
-                <td>{{ $producto->id }}</td>
+                <td><span class="badge badge-blue">{{ $producto->id }}</span></td>
             </tr>
             <tr>
                 <th>Nombre</th>
-                <td>{{ $producto->nombre }}</td>
+                <td><strong>{{ $producto->nombre }}</strong></td>
             </tr>
             <tr>
                 <th>SKU</th>
-                <td>{{ $producto->sku }}</td>
+                <td>
+                    <code style="background:#edf2f7; padding:0.2rem 0.6rem;
+                                 border-radius:5px; font-size:0.85rem;">
+                        {{ $producto->sku }}
+                    </code>
+                </td>
             </tr>
             <tr>
                 <th>Categoría</th>
-                <td>{{ $producto->categoria->nombre }}</td>
+                <td><span class="badge badge-blue">{{ $producto->categoria->nombre }}</span></td>
             </tr>
             <tr>
                 <th>Precio</th>
-                <td>Bs. {{ number_format($producto->precio, 2) }}</td>
+                <td>
+                    <strong style="font-size:1.1rem; color:#276749;">
+                        Bs. {{ number_format($producto->precio, 2) }}
+                    </strong>
+                </td>
             </tr>
             <tr>
                 <th>Stock</th>
-                <td>{{ $producto->stock }}</td>
+                <td>
+                    <span class="{{ $producto->stock > 0 ? 'badge badge-green' : 'badge badge-red' }}">
+                        {{ $producto->stock }} unidades
+                    </span>
+                </td>
             </tr>
             <tr>
                 <th>Disponible</th>
-                <td>{{ $producto->disponible ? '✅ Sí' : '❌ No' }}</td>
+                <td>
+                    @if($producto->disponible)
+                        <span class="badge badge-green">● Disponible</span>
+                    @else
+                        <span class="badge badge-red">● No disponible</span>
+                    @endif
+                </td>
             </tr>
             <tr>
                 <th>Creado</th>
-                <td>{{ $producto->created_at->format('d/m/Y H:i') }}</td>
+                <td style="color:#718096; font-size:0.85rem;">
+                    {{ $producto->created_at->format('d/m/Y H:i') }}
+                </td>
             </tr>
             <tr>
                 <th>Actualizado</th>
-                <td>{{ $producto->updated_at->format('d/m/Y H:i') }}</td>
+                <td style="color:#718096; font-size:0.85rem;">
+                    {{ $producto->updated_at->format('d/m/Y H:i') }}
+                </td>
             </tr>
-        </table>
+        </tbody>
+    </table>
 
-        <div style="margin-top:1.5rem;">
-            <a href="{{ route('productos.edit', $producto) }}" class="btn btn-warning">✏️ Editar</a>
-            <a href="{{ route('productos.index') }}" class="btn btn-secondary">⬅️ Volver</a>
-        </div>
+    <div class="form-actions">
+        <a href="{{ route('productos.edit', $producto) }}" class="btn btn-warning">
+            ✏️ Editar
+        </a>
+
+        <form action="{{ route('productos.destroy', $producto) }}"
+              method="POST" style="display:inline"
+              onsubmit="return confirm('¿Estás seguro de eliminar «{{ $producto->nombre }}»?')">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger">🗑 Eliminar</button>
+        </form>
+
+        <a href="{{ route('productos.index') }}" class="btn btn-secondary">← Volver al listado</a>
     </div>
+</div>
 
 @endsection

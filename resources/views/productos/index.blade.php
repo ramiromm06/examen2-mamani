@@ -4,59 +4,90 @@
 
 @section('contenido')
 
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-        <h1>📦 Lista de Productos</h1>
-        <a href="{{ route('productos.create') }}" class="btn btn-success">➕ Nuevo Producto</a>
-    </div>
+<div class="page-header">
+    <h1>📦 Productos</h1>
+    <a href="{{ route('productos.create') }}" class="btn btn-success">
+        + Nuevo Producto
+    </a>
+</div>
 
-    <table>
-        <thead>
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Nombre</th>
+            <th>SKU</th>
+            <th>Categoría</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse($productos as $producto)
             <tr>
-                <th>#</th>
-                <th>Nombre</th>
-                <th>SKU</th>
-                <th>Categoría</th>
-                <th>Precio</th>
-                <th>Stock</th>
-                <th>Disponible</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($productos as $producto)
-                <tr>
-                    <td>{{ $producto->id }}</td>
-                    <td>{{ $producto->nombre }}</td>
-                    <td>{{ $producto->sku }}</td>
-                    <td>{{ $producto->categoria->nombre }}</td>
-                    <td>Bs. {{ number_format($producto->precio, 2) }}</td>
-                    <td>{{ $producto->stock }}</td>
-                    <td>{{ $producto->disponible ? '✅ Sí' : '❌ No' }}</td>
-                    <td>
-                        {{-- Ver --}}
+                <td>
+                    <span class="badge badge-blue">{{ $producto->id }}</span>
+                </td>
+                <td>
+                    <strong>{{ $producto->nombre }}</strong>
+                </td>
+                <td>
+                    <code style="background:#edf2f7; padding:0.2rem 0.5rem;
+                                 border-radius:5px; font-size:0.8rem;">
+                        {{ $producto->sku }}
+                    </code>
+                </td>
+                <td>
+                    <span class="badge badge-blue">{{ $producto->categoria->nombre }}</span>
+                </td>
+                <td>
+                    <strong style="color:#276749;">
+                        Bs. {{ number_format($producto->precio, 2) }}
+                    </strong>
+                </td>
+                <td>
+                    <span class="{{ $producto->stock > 0 ? 'badge badge-green' : 'badge badge-red' }}">
+                        {{ $producto->stock }} uds.
+                    </span>
+                </td>
+                <td>
+                    @if($producto->disponible)
+                        <span class="badge badge-green">● Disponible</span>
+                    @else
+                        <span class="badge badge-red">● No disponible</span>
+                    @endif
+                </td>
+                <td>
+                    <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
                         <a href="{{ route('productos.show', $producto) }}"
-                           class="btn btn-primary">Ver</a>
+                           class="btn btn-primary btn-sm">Ver</a>
 
-                        {{-- Editar --}}
                         <a href="{{ route('productos.edit', $producto) }}"
-                           class="btn btn-warning">Editar</a>
+                           class="btn btn-warning btn-sm">Editar</a>
 
-                        {{-- Eliminar --}}
                         <form action="{{ route('productos.destroy', $producto) }}"
                               method="POST" style="display:inline"
-                              onsubmit="return confirm('¿Estás seguro de eliminar este producto?')">
+                              onsubmit="return confirm('¿Estás seguro de eliminar «{{ $producto->nombre }}»? Esta acción no se puede deshacer.')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                         </form>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="8" style="text-align:center;">No hay productos registrados.</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+                    </div>
+                </td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="8">
+                    <div class="empty-state">
+                        📭
+                        <p>No hay productos registrados aún.</p>
+                    </div>
+                </td>
+            </tr>
+        @endforelse
+    </tbody>
+</table>
 
 @endsection
